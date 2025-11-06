@@ -1,0 +1,16 @@
+# .dockerignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.db
+*.sqlite3
+.env
+.venv/
+.env/
+.git/
+.gitignore
+.cache/
+node_modules/
+*.egg-info/

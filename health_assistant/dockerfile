@@ -1,0 +1,42 @@
+# ==========================================
+# Stage 1: Base image
+# ==========================================
+FROM python:3.12-bookworm  AS base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+WORKDIR /app
+
+# ==========================================
+# Stage 2: System dependencies
+# ==========================================
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libopenblas-dev \
+    libomp-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# ==========================================
+# Stage 3: Python dependencies
+# ==========================================
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
+
+# ==========================================
+# Stage 4: Copy source
+# ==========================================
+COPY . /app
+
+# ==========================================
+# Stage 5: Environment and Run
+# ==========================================
+ENV API_KEY="PRIVATE11"
+ENV HF_HOME="/root/.cache/huggingface"
+ENV TRANSFORMERS_CACHE="/root/.cache/transformers"
+
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

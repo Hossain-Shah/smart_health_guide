@@ -1,0 +1,34 @@
+name: Build and Deploy Backend
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Lint and Tests
+        run: |
+          python -m py_compile $(find . -name "*.py")
+
+      - name: Build Docker Image
+        run: docker build -t health_assistant .
+
+      - name: Push to Docker Hub
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.DOCKER_HUB_PASS }}" | docker login -u "${{ secrets.DOCKER_HUB_USER }}" --password-stdin
+          docker tag health_assistant ${{ secrets.DOCKER_HUB_USER }}/health_assistant:latest
+          docker push ${{ secrets.DOCKER_HUB_USER }}/health_assistant:latest
