@@ -1,6 +1,6 @@
-## Health Assistant — README
+# Health Assistant — README
 
-# Project Overview
+## Project Overview
 
 This project implements a bilingual (English/Japanese) Retrieval-Augmented Generation (RAG) assistant for healthcare guidelines. It provides:
 
@@ -16,7 +16,7 @@ This project implements a bilingual (English/Japanese) Retrieval-Augmented Gener
 
 The system is modular, scalable, and designed for extension into production-grade deployments.
 
-# Setup Instructions
+## Setup Instructions
 
 |_Clone Repo:
 git clone <your-repo-url>
@@ -37,7 +37,7 @@ Tip: Mount a local data/ folder to persist FAISS index and documents:
 
 docker run -p 8000:8000 -v $(pwd)/data:/app/data -e API_KEY=PRIVATE11 health_assistant
 
-# Authentication
+## Authentication
 
 All endpoints require the header:
 
@@ -46,7 +46,7 @@ X-API-Key: PRIVATE11
 
 Requests without the correct API key will return 401 Unauthorized.
 
-# API Endpoints
+## API Endpoints
 
 |_Endpoint	Method	Description
 /ingest	POST -	Upload a .txt document (English/Japanese)
@@ -59,14 +59,14 @@ curl -X POST "http://localhost:8000/generate" \
   -F "query=What are the latest guidelines for type 2 diabetes?" \
   -F "output_language=en"
 
-# Environment Variables
+## Environment Variables
 
 |_Variable	Description	Default
 - API_KEY	Authentication key	PRIVATE11
 - HF_HOME	Hugging Face cache path	/root/.cache/huggingface
 - TRANSFORMERS_CACHE	Transformers cache path	/root/.cache/transformers
 
-# Design Notes — Scalability, Modularity & Future Improvements
+## Design Notes — Scalability, Modularity & Future Improvements
 
 * Scalability
 * Vector Search: FAISS is used for local indexing; for production, a distributed vector DB (e.g., Pinecone, Qdrant, Weaviate) can replace it.
